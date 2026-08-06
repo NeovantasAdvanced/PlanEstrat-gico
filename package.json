@@ -1,0 +1,9 @@
+{
+  "name": "meraki-comite-api",
+  "version": "1.0.0",
+  "description": "API que guarda las respuestas del comité en SharePoint vía Microsoft Graph",
+  "main": "submit/index.js",
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -258,7 +258,7 @@
    CONFIGURACIÓN — rellena esta línea tras crear el flujo de Power Automate
    (ver README.md, paso 4). Pega aquí la URL "HTTP POST URL" del flujo.
    ===================================================================== */
-const SUBMIT_ENDPOINT = ""; // p. ej. "https://prod-XX.westeurope.logic.azure.com:443/workflows/..."
+const SUBMIT_ENDPOINT = "/api/submit"; // función de Azure integrada (escribe en SharePoint vía Graph)
 /* ===================================================================== */
 
 const qIds=['q1','q2','q3'];
@@ -280,7 +280,7 @@ form.addEventListener('submit',async(e)=>{e.preventDefault();formError.textConte
     q1=document.getElementById('q1').value.trim(),q2=document.getElementById('q2').value.trim(),q3=document.getElementById('q3').value.trim();
   if(!nombre){formError.textContent='Indica tu nombre antes de enviar.';return;}
   if(!q1&&!q2&&!q3){formError.textContent='Responde al menos a una de las tres preguntas.';return;}
-  if(!SUBMIT_ENDPOINT){formError.textContent='El formulario aún no está conectado al almacenamiento. Configura SUBMIT_ENDPOINT (ver README).';return;}
+  if(!SUBMIT_ENDPOINT){formError.textContent='El formulario no está conectado al almacenamiento (ver README).';return;}
   submitBtn.disabled=true;submitBtn.textContent='Enviando…';
   const payload={nombre,q1,q2,q3,timestamp:new Date().toISOString(),origen:location.hostname};
   try{
