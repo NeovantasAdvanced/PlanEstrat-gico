@@ -9,17 +9,24 @@ respuesta **directamente en una lista de SharePoint** mediante una pequeña **fu
 
 ```
 index.html                 la página (resumen + formulario)
-staticwebapp.config.json   login obligatorio con Entra ID
+resultados.html            panel para revisar las respuestas (solo rol "revisor")
+staticwebapp.config.json   login con Entra ID + protección por roles
 README.md                  esta guía
 api/
   host.json
   package.json
+  shared/
+    graph.js               utilidades comunes de Microsoft Graph
   submit/
-    function.json          define la ruta POST /api/submit
-    index.js               recibe el envío y lo escribe en SharePoint vía Graph
+    function.json          ruta POST /api/submit (escribe una respuesta)
+    index.js
+  responses/
+    function.json          ruta GET /api/responses (lee las respuestas, solo "revisor")
+    index.js
 ```
 
-El formulario ya llama a `/api/submit`, así que no hay que editar ninguna URL en el HTML.
+El formulario llama a `/api/submit` y el panel a `/api/responses`, así que no hay que editar ninguna URL
+en el HTML.
 
 ---
 
@@ -152,7 +159,28 @@ Guarda. La app se reinicia sola.
 Comprobación final: abre la URL, inicia sesión, rellena el formulario y envíalo. Debe aparecer
 "Respuestas recibidas" y, en la lista `Respuestas Meraki` de SharePoint, una fila nueva con los datos.
 
-### Fase 6 — (Opcional) Dominio propio
+### Fase 6 — Página de resultados (solo revisores)
+
+La página `resultados.html` muestra todas las respuestas y permite buscarlas y exportarlas a CSV. Se sirve
+en `https://<TU-URL>/resultados.html`. Los datos que consume (`/api/responses`) están restringidos al rol
+**`revisor`**: cualquiera de la organización puede abrir la página, pero solo quien tenga ese rol verá las
+respuestas; al resto le aparece "No tienes permiso".
+
+Para dar el rol a las personas que deban revisar (p. ej. tú y quien elabore el plan):
+
+1. Recurso Static Web App → **Role management** → **Invite**.
+2. Introduce el correo de la persona, elige el proveedor Entra ID y en "Roles" escribe **`revisor`**.
+3. Genera el enlace de invitación y envíaselo; al aceptarlo queda con ese rol.
+
+*(Alternativa escalable: en lugar de invitaciones, puedes definir un "app role" `revisor` en el registro de
+Entra y asignarlo a un grupo; para un comité reducido, las invitaciones son más rápidas.)*
+
+Quien tenga el rol verá además un enlace directo **"Ver resultados"** en la cabecera del propio formulario.
+
+Comprobación: entra con una cuenta con rol `revisor` y abre `/resultados.html`; deben aparecer las
+respuestas enviadas. Con una cuenta sin el rol, la página carga pero indica que no hay permiso.
+
+### Fase 7 — (Opcional) Dominio propio
 
 Recurso Static Web App → "Custom domains" → añade p. ej. `comite.neovantas.com`. Azure gestiona el
 certificado HTTPS. Si lo haces, actualiza también la URI de redirección de la fase 4 con el nuevo dominio.
@@ -161,14 +189,19 @@ certificado HTTPS. Si lo haces, actualiza también la URI de redirección de la 
 
 ## Leer las respuestas
 
-Abre la lista `Respuestas Meraki` en SharePoint. Con un clic en "Exportar → Exportar a Excel" tienes todas
-las respuestas en una hoja para elaborar el plan. Están gobernadas por los permisos de tu organización y
-respaldadas por Microsoft 365; no dependen del sitio ni se pierden si lo despublicas.
+Tienes dos formas, ambas restringidas:
+
+- **Panel web** (`/resultados.html`): cómodo para revisar durante el trabajo del comité, con búsqueda y
+  botón de exportar a CSV. Solo accesible con el rol `revisor` (ver fase 6).
+- **SharePoint**: abre la lista `Respuestas Meraki` y usa "Exportar → Exportar a Excel". Es el origen de
+  verdad de los datos, gobernado por los permisos de tu organización y respaldado por Microsoft 365; no
+  depende del sitio ni se pierde si lo despublicas.
 
 ## Notas de seguridad
 
-- No hay ningún endpoint público de lectura. `/api/submit` solo escribe y está detrás del login de Entra ID
-  (solo lo invoca quien ya ha iniciado sesión).
+- `/api/submit` solo escribe y está detrás del login de Entra ID (solo lo invoca quien ya ha iniciado
+  sesión). `/api/responses` solo lee y además exige el rol `revisor`, así que las respuestas no son visibles
+  para todo el que rellena el formulario.
 - Con `Sites.Selected`, la app solo puede escribir en el sitio que autorizaste, no en todo SharePoint.
 - Mantén el repositorio **privado**. El secreto de cliente vive en la configuración de Azure, nunca en el
   código del repo.

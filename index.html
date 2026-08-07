@@ -268,7 +268,8 @@ qIds.forEach((id,i)=>{const ta=document.getElementById(id),cc=document.getElemen
 /* Muestra quién ha iniciado sesión (Azure Static Web Apps / Entra ID) */
 (async()=>{try{const r=await fetch('/.auth/me');if(r.ok){const d=await r.json();
   const u=d&&d.clientPrincipal;if(u&&u.userDetails){
-    document.getElementById('whoami').innerHTML='Sesión: '+u.userDetails+' · <a href="/.auth/logout">Cerrar sesión</a>';}}
+    const roles=(u&&u.userRoles)||[];const rev=roles.includes('revisor')?' · <a href="/resultados.html">Ver resultados</a>':'';
+    document.getElementById('whoami').innerHTML='Sesión: '+u.userDetails+rev+' · <a href="/.auth/logout">Cerrar sesión</a>';}}
 }catch(e){}})();
 
 const form=document.getElementById('respForm'),submitBtn=document.getElementById('submitBtn'),

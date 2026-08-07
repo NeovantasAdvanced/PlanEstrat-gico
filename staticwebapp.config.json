@@ -3,6 +3,14 @@
 
   "routes": [
     {
+      "route": "/api/responses",
+      "allowedRoles": ["revisor"]
+    },
+    {
+      "route": "/api/submit",
+      "allowedRoles": ["authenticated"]
+    },
+    {
       "route": "/api/*",
       "allowedRoles": ["authenticated"]
     },
@@ -33,7 +41,7 @@
 
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/api/*", "/.auth/*", "/*.{css,js,png,jpg,jpeg,ico,svg}"]
+    "exclude": ["/api/*", "/.auth/*", "/resultados.html", "/*.{css,js,png,jpg,jpeg,ico,svg}"]
   },
 
   "globalHeaders": {
