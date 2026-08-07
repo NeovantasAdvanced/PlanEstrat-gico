@@ -1,49 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/staticwebapp.config.json",
-
-  "routes": [
-    {
-      "route": "/api/responses",
-      "allowedRoles": ["revisor"]
-    },
-    {
-      "route": "/api/submit",
-      "allowedRoles": ["authenticated"]
-    },
-    {
-      "route": "/api/*",
-      "allowedRoles": ["authenticated"]
-    },
-    {
-      "route": "/*",
-      "allowedRoles": ["authenticated"]
-    }
-  ],
-
-  "responseOverrides": {
-    "401": {
-      "redirect": "/.auth/login/aad",
-      "statusCode": 302
-    }
-  },
-
-  "auth": {
-    "identityProviders": {
-      "azureActiveDirectory": {
-        "registration": {
-          "openIdIssuer": "https://login.microsoftonline.com/REEMPLAZA_TENANT_ID/v2.0",
-          "clientIdSettingName": "AAD_CLIENT_ID",
-          "clientSecretSettingName": "AAD_CLIENT_SECRET"
-        }
-      }
-    }
-  },
-
   "navigationFallback": {
     "rewrite": "/index.html",
     "exclude": ["/api/*", "/.auth/*", "/resultados.html", "/*.{css,js,png,jpg,jpeg,ico,svg}"]
   },
-
   "globalHeaders": {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "SAMEORIGIN"
