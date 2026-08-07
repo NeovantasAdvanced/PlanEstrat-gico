@@ -100,7 +100,10 @@
   .whoami{text-align:right;padding:8px 52px 0;font-size:11.5px;color:var(--ink-soft);}
   .whoami a{color:var(--blue);text-decoration:none;}
   .footer{padding:18px 52px 26px;background:#fff;}
-  .footer p{margin:0;font-size:11px;color:#9aa4b2;border-top:1px solid var(--line-soft);padding-top:14px;}
+  .footer .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line-soft);padding-top:14px;}
+  .footer p{margin:0;font-size:11px;color:#9aa4b2;}
+  .footer .version{font-size:11px;color:#9aa4b2;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .footer .version b{color:var(--navy);font-weight:600;}
   @media (max-width:680px){.formwrap,.footer,.whoami{padding-left:24px;padding-right:24px;}}
 </style>
 </head>
@@ -250,7 +253,7 @@
     </div>
   </div>
 
-  <div class="footer"><p>Base de análisis: seguimiento Meraki 2024-2026 y actualización del Comité Meraki de julio de 2026.</p></div>
+  <div class="footer"><div class="row"><p>Base de análisis: seguimiento Meraki 2024-2026 y actualización del Comité Meraki de julio de 2026.</p><span class="version">Versión <b>1.0.0</b> · 2026-08-07</span></div></div>
 </div>
 
 <script>
